@@ -1,25 +1,63 @@
-// sense if the tab is active
-
-chrome.tabs.query({
-    active:true,
-    currentWindow: true
-}, function(tabs) {
-    var tab = tabs[0];
-    var url = tabs.url;
-  console.log(url)
-})
+const timesOfCoding = {};
+let currentTab;  
+let loginTime;
+let duration = 0;
+let studyTab;
 
 
-// chrome.tabs.onActivated.addListener(tab => {
-//   //start a new session if target url
-//   chrome.tabs.get(tab.tabId, current_tab_info => {
+chrome.tabs.onActivated.addListener((tab) => {
+// start a new session if target url  
+  
+  chrome.tabs.get(tab.tabId, (current_tab_info) => {
+
+    if(current_tab_info.url.includes('leetcode.com')){
+      currentTab = current_tab_info.url;
+      studyTab = tab;
+      if(!timesOfCoding[current_tab_info.url]){
+        timesOfCoding[current_tab_info.url] = {};
+      }
+      loginTime = new Date();
+      timesOfCoding[current_tab_info.url][loginTime] = 'start'; 
+    }
+    if(!current_tab_info.url.includes('leetcode.com')){
+      let lastSite;
+      if(timesOfCoding[currentTab]){
+        
+        for(const keys of Object.keys(timesOfCoding[currentTab])){
+          lastSite = timesOfCoding[currentTab][keys]
+          
+        }
+      }
+      
+      if(lastSite === 'start'){
+        timesOfCoding[currentTab][new Date()] = 'stop'
+        let session = 0;
+
+        for(let i = 0; i < Object.keys(timesOfCoding[currentTab]).length - 1; i += 2){
+          session = (Date.parse(Object.keys(timesOfCoding[currentTab])[i + 1]) - Date.parse(Object.keys(timesOfCoding[currentTab])[i]))
+        }
+        duration += session; 
+      }
+      
+    }   
+  });
+});
+
+console.log(duration, timesOfCoding)
+
+
+chrome.tabs.onRemoved.addListener(function(tabid, removed) {
+    if(studyTab == tabid){
+        //transfer object and stuff back to database here.  
+        alert('you should get back to studying')
+    }
     
-//     if(current_tab_info.url.includes('leetcode.com')){
-//        console.log(current_tab_info.url)
-//     }
-//   })
-    
-// })
+   })
+   
+   chrome.windows.onRemoved.addListener(function(windowid) {
+    alert("window closed")
+   })
+   
 
-// get the tab to make sure it's one of our domains 
-// console.log domain
+
+//  || current_tab_info.url.includes('csx.codesmith.io') || current_tab_info.url.includes('www.codewars.com/') || current_tab_info.url.includes('https://developer.mozilla.org/'))
