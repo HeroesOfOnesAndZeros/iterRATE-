@@ -6,6 +6,7 @@ let duration = (localStorage.getItem('total')) ? localStorage.getItem('total') :
 let studyTab;
 const hardData = {};
 hardData.total = 0;
+//console.log(document.querySelectorAll('h1'))
 
 chrome.tabs.onActivated.addListener((tab) => {
 // start a new session if target url  
@@ -49,23 +50,23 @@ chrome.tabs.onActivated.addListener((tab) => {
 });
 
 
-
-
 chrome.tabs.onRemoved.addListener(function(tabid, removed) {
   console.log(hardData.studyTab.tabId, tabid, hardData.total)
+   
   if(hardData.studyTab.tabId === tabid){
+    chrome.windows.create({'url': './popup.html', 'type': 'popup'}, function(window) {
+    });
     console.log(hardData.total)
     //transfer object and stuff back to database here.  
-    alert('you should get back to studying')
+   
     saveData(hardData.total, timesOfCoding)
   }
-    
 })
    
 chrome.windows.onRemoved.addListener(function(windowid) {
   alert("window closed")
 })
-   
+  
 
 // Show the tool tip
 chrome.browserAction.onClicked.addListener('click', function () {
