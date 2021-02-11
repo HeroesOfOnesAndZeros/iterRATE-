@@ -10,29 +10,24 @@ chrome.tabs.onActivated.addListener((tab) => {
   });
 });
 
-// Evaluate if this is a first visit
-let data = localStorage.getItem('data');
-if (!data) {
-  localStorage.setItem('data', data);
-  localStorage.setItem('total', 0);
-}
+// Show the tool tip
+chrome.browserAction.onClicked.addListener('click', function () => {
+  const popoverHTML = 
+  const popover = new bootstrap.Popover(document.querySelector('.example-popover'), {
+    container: 'body'
+  })
+})
 
-// load existing data
-data = localStorage.getItem('data');
-let total = localStorage.getItem('total') ? ;
-
-
-
-
-
-
+// Load our data from our data base, or set us up with solid items
+let data = (localStorage.getItem('data')) ? JSON.parse(localStorage.getItem('data')) : {};
+let total = (localStorage.getItem('total')) ? localStorage.getItem('total') : 0;
 
 
 
 
 
 // function for saving our data
-function saveData (totes, obj) { 
-  localStorage.setItem('data', obj);
+function saveData(totes, obj) { 
+  localStorage.setItem('data', JSON.stringify(obj));
   localStorage.setItem('total', totes);
 }
