@@ -6,7 +6,7 @@ let duration = (localStorage.getItem('total')) ? localStorage.getItem('total') :
 let studyTab;
 const hardData = {};
 hardData.total = 0;
-//console.log(document.querySelectorAll('h1'))
+console.log(document.getElementById('progress-bar'))
 
 chrome.tabs.onActivated.addListener((tab) => {
 // start a new session if target url  
@@ -54,8 +54,16 @@ chrome.tabs.onRemoved.addListener(function(tabid, removed) {
   console.log(hardData.studyTab.tabId, tabid, hardData.total)
    
   if(hardData.studyTab.tabId === tabid){
-    chrome.windows.create({'url': './popup.html', 'type': 'popup'}, function(window) {
+    
+  
+    chrome.windows.create({'url': './options.html', 'type': 'popup'}, function(wd) {
+     // console.log(wd,wd.document,this)
+      //console.log(this.document.body.getElementById('#progress-bar'))
+      console.log(popup)
+      
+
     });
+    console.log(poppup)
     console.log(hardData.total)
     //transfer object and stuff back to database here.  
    
@@ -64,7 +72,7 @@ chrome.tabs.onRemoved.addListener(function(tabid, removed) {
 })
    
 chrome.windows.onRemoved.addListener(function(windowid) {
-  alert("window closed")
+  //alert("window closed")
 })
   
 
