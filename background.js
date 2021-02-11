@@ -1,9 +1,10 @@
-const timesOfCoding = {};
+const timesOfCoding = (localStorage.getItem('data')) ? JSON.parse(localStorage.getItem('data')) : {};
+
 let currentTab;  
 let loginTime;
-let duration = 0;
+let duration = (localStorage.getItem('total')) ? localStorage.getItem('total') : 0;
 let studyTab;
-
+const hardData = {};
 
 chrome.tabs.onActivated.addListener((tab) => {
 // start a new session if target url  
@@ -43,13 +44,14 @@ chrome.tabs.onActivated.addListener((tab) => {
   });
 });
 
-console.log(duration, timesOfCoding)
+console.log(hardData, timesOfCoding)
 
 
 chrome.tabs.onRemoved.addListener(function(tabid, removed) {
     if(studyTab == tabid){
         //transfer object and stuff back to database here.  
         alert('you should get back to studying')
+        saveData(duration, timesOfCoding)
     }
     
    })
@@ -59,5 +61,17 @@ chrome.tabs.onRemoved.addListener(function(tabid, removed) {
    })
    
 
+// Show the tool tip
+chrome.browserAction.onClicked.addListener('click', function () => {
+    const popoverHTML = 
+    const popover = new bootstrap.Popover(document.querySelector('.example-popover'), {
+      container: 'body'
+    })
+  })
 
+// function for saving our data
+function saveData(totes, obj) { 
+    localStorage.setItem('data', JSON.stringify(obj));
+    localStorage.setItem('total', totes);
+  }
 //  || current_tab_info.url.includes('csx.codesmith.io') || current_tab_info.url.includes('www.codewars.com/') || current_tab_info.url.includes('https://developer.mozilla.org/'))
