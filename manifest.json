@@ -21,6 +21,7 @@
         "https://csx.codesmith.io/*",
         "https://leetcode.com/*",
         "https://www.codewars.com/*",
+        "https://developer.mozilla.org/*",
         "storage"
     ]
 }
