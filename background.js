@@ -13,7 +13,7 @@ chrome.tabs.onActivated.addListener((tab) => {
 
     if(current_tab_info.url.includes('leetcode.com')){
       currentTab = current_tab_info.url;
-      studyTab = tab;
+      hardData.studyTab = tab;
       if(!timesOfCoding[current_tab_info.url]){
         timesOfCoding[current_tab_info.url] = {};
       }
@@ -38,20 +38,23 @@ chrome.tabs.onActivated.addListener((tab) => {
           session = (Date.parse(Object.keys(timesOfCoding[currentTab])[i + 1]) - Date.parse(Object.keys(timesOfCoding[currentTab])[i]))
         }
         duration += session; 
+        hardData.duration = duration;
       }
       
     }   
   });
 });
 
-console.log(hardData, timesOfCoding)
+
 
 
 chrome.tabs.onRemoved.addListener(function(tabid, removed) {
-    if(studyTab == tabid){
+    console.log(hardData.studyTab.tabId, tabid, Number(hardData.duration))
+    if(hardData.studyTab.tabId === tabid){
+    
         //transfer object and stuff back to database here.  
         alert('you should get back to studying')
-        saveData(duration, timesOfCoding)
+        saveData(hardData.duration, timesOfCoding)
     }
     
    })
@@ -62,8 +65,8 @@ chrome.tabs.onRemoved.addListener(function(tabid, removed) {
    
 
 // Show the tool tip
-chrome.browserAction.onClicked.addListener('click', function () => {
-    const popoverHTML = 
+chrome.browserAction.onClicked.addListener('click', function () {
+
     const popover = new bootstrap.Popover(document.querySelector('.example-popover'), {
       container: 'body'
     })
@@ -74,4 +77,7 @@ function saveData(totes, obj) {
     localStorage.setItem('data', JSON.stringify(obj));
     localStorage.setItem('total', totes);
   }
+
+
+
 //  || current_tab_info.url.includes('csx.codesmith.io') || current_tab_info.url.includes('www.codewars.com/') || current_tab_info.url.includes('https://developer.mozilla.org/'))
