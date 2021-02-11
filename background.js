@@ -5,6 +5,7 @@ let loginTime;
 let duration = (localStorage.getItem('total')) ? localStorage.getItem('total') : 0;
 let studyTab;
 const hardData = {};
+hardData.total = 0;
 
 chrome.tabs.onActivated.addListener((tab) => {
 // start a new session if target url  
@@ -37,10 +38,12 @@ chrome.tabs.onActivated.addListener((tab) => {
         for(let i = 0; i < Object.keys(timesOfCoding[currentTab]).length - 1; i += 2){
           session = (Date.parse(Object.keys(timesOfCoding[currentTab])[i + 1]) - Date.parse(Object.keys(timesOfCoding[currentTab])[i]))
         }
-        duration += session; 
-        hardData.duration = duration;
+        console.log(duration, session)
+        duration = Number(duration);
+        duration += Number(session); 
+        hardData.total = Number(duration);
+        console.log(duration,session)
       }
-      
     }   
   });
 });
@@ -49,34 +52,34 @@ chrome.tabs.onActivated.addListener((tab) => {
 
 
 chrome.tabs.onRemoved.addListener(function(tabid, removed) {
-    console.log(hardData.studyTab.tabId, tabid, Number(hardData.duration))
-    if(hardData.studyTab.tabId === tabid){
+  console.log(hardData.studyTab.tabId, tabid, hardData.total)
+  if(hardData.studyTab.tabId === tabid){
+    console.log(hardData.total)
+    //transfer object and stuff back to database here.  
+    alert('you should get back to studying')
+    saveData(hardData.total, timesOfCoding)
+  }
     
-        //transfer object and stuff back to database here.  
-        alert('you should get back to studying')
-        saveData(hardData.duration, timesOfCoding)
-    }
-    
-   })
+})
    
-   chrome.windows.onRemoved.addListener(function(windowid) {
-    alert("window closed")
-   })
+chrome.windows.onRemoved.addListener(function(windowid) {
+  alert("window closed")
+})
    
 
 // Show the tool tip
 chrome.browserAction.onClicked.addListener('click', function () {
 
-    const popover = new bootstrap.Popover(document.querySelector('.example-popover'), {
-      container: 'body'
-    })
+  const popover = new bootstrap.Popover(document.querySelector('.example-popover'), {
+    container: 'body'
   })
+})
 
 // function for saving our data
 function saveData(totes, obj) { 
-    localStorage.setItem('data', JSON.stringify(obj));
-    localStorage.setItem('total', totes);
-  }
+  localStorage.setItem('data', JSON.stringify(obj));
+  localStorage.setItem('total', totes);
+}
 
 
 
